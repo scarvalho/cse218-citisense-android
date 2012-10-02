@@ -1,0 +1,10 @@
+<project name="RichService" default="dist" basedir=".">
+	<target name="dist" description="generate the distribution">
+		<mkdir dir="dist/lib" />
+		<jar jarfile="dist/lib/rich-services.jar" basedir="bin" />
+	</target>
+
+	<target name="clean" description="clean up">
+		<delete dir="dist" />
+	</target>
+</project>

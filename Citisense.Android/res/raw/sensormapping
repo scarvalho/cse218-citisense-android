@@ -1,0 +1,4 @@
+# contains mappings of IDs to use during the communication of sensor/phone/backend.
+# each line has the sensor type, its assigned sensor id by the system, and the header for that type of sensor data.
+#1:4cd09c1d592a000000002470:time,latitude,longitude,elevation
+1:4cd09c1d592a000000002470:time,latitude,longitude,elevation,data

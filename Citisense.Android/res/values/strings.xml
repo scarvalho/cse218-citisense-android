@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, Aqi activity!</string>
+    <string name="app_name">CitiSense</string>
+    
+    <!--  BluetoothChat -->
+    <string name="send">Send</string>
+    <string name="sense">Sense</string>
+    <string name="not_connected">You are not connected to a device</string>
+    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>
+    <string name="title_connecting">connecting...</string>
+    <string name="title_connected_to">connected: </string>
+    <string name="title_not_connected">not connected</string>
+
+    <!--  DeviceListActivity -->
+    <string name="scanning">scanning for devices...</string>
+    <string name="select_device">select a device to connect</string>
+    <string name="none_paired">No devices have been paired</string>
+    <string name="none_found">No devices found</string>
+    <string name="title_paired_devices">Paired Devices</string>
+    <string name="title_other_devices">Other Available Devices</string>
+    <string name="button_scan">Scan for devices</string>
+
+    <!-- Options Menu -->
+    <string name="connect">Connect a device</string>
+    <string name="discoverable">Make discoverable</string>
+    <string name="celalAct">Status/Debugging Tool</string>
+    <string name="lockScreen">Lock Screen</string>
+    <string name="exitApp">Exit</string>
+     
+    <string name="detailedTitle">Pollutant Details</string>
+ 	<string name="closestLocation">(San Diego)</string>
+ 	   
+	<string name="share_aqi">Share your AQI</string>
+	<string name="share">Share...</string>
+	<string name="aqi_good">Good</string>	
+	<string name="aqi_moderate">Moderate</string>	
+	<string name="aqi_sensitive">Unhealthy for Sensitive</string>	
+	<string name="aqi_unhealthy">Unhealthy</string>
+	<string name="aqi_very_unhealthy">Very Unhealthy</string>
+	<string name="aqi_hazardous">Hazardous</string>
+	<string name="aqi_connecting">Connecting...</string>
+	<string name="aqi_not_available">Not Available</string>
+	<string name="aqi_error">Error</string>	
+	<string name="menu_reset">Reset</string>
+	
+	<string name="ozone">Ozone</string>
+	<string name="nox">NOX (Nitrogen Oxide)</string>
+	<string name="no2">NO2 (Nitrogen Dioxide)</string>
+	<string name="no">NO (Nitric Oxide)</string>
+	<string name="so2">SO2 (Sulfur Dioxide)</string>
+	<string name="co">CO (Carbon Monoxide)</string>
+	<string name="temp">Temperature (F)</string>
+	<string name="pm25">PM 2.5 (Particular Matter 2.5)</string>	
+	<string name="degreeF">Degree (F)</string>
+	<string name="humd">Humidity</string>
+	<string name="pres">Barometric Pressure</string>
+	<string name="barometricPressure">Barometric Pressure</string>
+	<string name="dayMax">Today\'s Maximum AQI</string>
+	<string name="notAvailable">NA</string>
+	
+<!--	Must align w/ # of rows in detailed.xml's TableLayout!-->
+    <string-array name="pollutantsArray">
+        <item>CO</item>
+        <item>O3</item>
+        <item>NO2</item>
+        <item>TEMP</item>
+        <item>HUMD</item>
+        <item>PRES</item>     
+    </string-array>
+
+    <string-array name="locationsArray">
+        <item>Alpine</item>
+        <item>Chula Vista</item>
+        <item>Del Mar</item>
+        <item>Downtown</item>
+        <item>El Cajon</item>
+        <item>Escondido</item>
+        <item>Otay Mesa</item>
+        <item>Overland</item>
+        <item>Pendleton</item>
+        <item>San Marcos</item>                      
+    </string-array>
+        
+</resources>

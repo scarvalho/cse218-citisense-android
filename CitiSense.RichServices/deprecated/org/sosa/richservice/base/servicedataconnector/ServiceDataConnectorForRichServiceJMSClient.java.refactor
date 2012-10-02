@@ -1,0 +1,120 @@
+package org.sosa.richservice.base.servicedataconnector;
+
+import java.lang.reflect.Method;
+
+import org.citisense.service.ComputationService;
+import org.citisense.service.SensorDataStorageService;
+import org.sosa.richservice.Message;
+import org.sosa.richservice.MessageBus;
+import org.sosa.richservice.MessageRequest;
+import org.sosa.richservice.ServiceDataConnectorForRichService;
+import org.sosa.richservice.ServiceDescriptor;
+import org.sosa.richservice.ServiceRequest;
+import org.sosa.richservice.base.MessageErrorBase;
+import org.sosa.richservice.base.MessageResponseBase;
+import org.sosa.richservice.utils.RichServiceUtils;
+
+/**
+ * 
+ * @author celal.ziftci
+ * 
+ */
+public class ServiceDataConnectorForRichServiceJMSClient implements
+		ServiceDataConnectorForRichService<ServiceDescriptor> {
+
+	private MessageBus bus;
+	private ServiceDescriptor descriptor;
+	private SensorDataStorageService dataStorageService;
+	private ComputationService computationService;
+
+	public SensorDataStorageService getDataStorageService() {
+		return dataStorageService;
+	}
+
+	public void setDataStorageService(
+			SensorDataStorageService dataStorageService) {
+		this.dataStorageService = dataStorageService;
+	}
+
+	public ComputationService getComputationService() {
+		return computationService;
+	}
+
+	public void setComputationService(ComputationService computationService) {
+		this.computationService = computationService;
+	}
+
+	public ServiceDataConnectorForRichServiceJMSClient(
+			ServiceDescriptor externalServiceDescriptor) {
+		this.descriptor = externalServiceDescriptor;
+	}
+
+	@Override
+	public Object handleServiceRequest(ServiceRequest request) {
+		// Should never be called...
+		return null;
+	}
+
+	@Override
+	public void receiveMessage(Message msg) {
+		if (msg instanceof MessageRequest) {
+			MessageRequest request = (MessageRequest) msg;
+			String operation = request.getOperation();
+			Class[] paramTypes = request.getOperationParameterTypes();
+			Method method = null;
+			Object service = null;
+			try {
+				method = dataStorageService.getClass().getMethod(operation,
+						paramTypes);
+				service = dataStorageService;
+			} catch (NoSuchMethodException e) {
+			}
+
+			if (method == null) {
+				try {
+					method = computationService.getClass().getMethod(operation,
+							paramTypes);
+					service = computationService;
+				} catch (NoSuchMethodException e) {
+				}
+			}
+
+			try {
+				Object result = method.invoke(service, request
+						.getOperationParameterValues());
+				bus.deliverMessage(new MessageResponseBase(descriptor
+						.getServiceName(), msg.getSource(), RichServiceUtils
+						.generateMessageId(), msg.getMessageId(), result));
+			} catch (Throwable e) {
+				e.printStackTrace();
+				String error = RichServiceUtils.throwableToString(e.getCause());
+				bus.deliverMessage(new MessageErrorBase(descriptor
+						.getServiceName(), msg.getSource(), RichServiceUtils
+						.generateMessageId(), msg.getMessageId(), error, e
+						.getCause()));
+			}
+		}
+		// FIXME: This connector does not expose any interfaces to the upper
+		// world yet. If it does one day, we will think about it...
+	}
+
+	@Override
+	public ServiceDescriptor getService() {
+		return descriptor;
+	}
+
+	@Override
+	public void setService(ServiceDescriptor service) {
+		this.descriptor = service;
+	}
+
+	@Override
+	public MessageBus getMessageBus() {
+		return bus;
+	}
+
+	@Override
+	public void setMessageBus(MessageBus bus) {
+		this.bus = bus;
+	}
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="AVG_SENSOR_READING_PAYLOAD_LENGTH">65</integer>
+    <integer name="AVG_SDAPC_WEB_REPORT_LENGTH">1000</integer>
+    <integer name="sensorConnectDelay">10000</integer>
+    <integer name="timeoutConnect">5000</integer>
+    <integer name="timeoutOperation">45000</integer>
+    <string name="serverHost">your.server.here</string>
+    <integer name="serverPort">80</integer>
+    <!-- <string name="serverRequestUri">http://your.server.here:80/sensorreadings/add-compressed/</string> -->
+    <string name="serverAddCompressedUri">http://your.server.here:80/sensorreadings/add-simple-compressed/</string>
+    <string name="serverUpdateRegionsUri">http://your.server.here:80/aqis/update-regions/</string>
+    <string name="serverHeartBeatUri">http://your.server.here:80/heartbeat/</string>
+    <string name="serverRequestMapUrlRoot">http://your.server.here/aqis/summary/public-map/</string>
+    <string name="serverApprovalMapUrlRoot">http://your.server.here/aqis/approve-public-share/</string>
+    <integer name="connectivityCheckFrequency">60000</integer> <!-- Should no longer be used -->
+    <integer name="flushingTriggerFrequency">600000</integer>
+    <integer name="maxSecondsOfDataToFlush">3600</integer>
+    <string name="sanDiegoPollutionWebSite">http://www.sdapcd.org/air/data/web_report.txt</string>
+    <integer name="sanDiegoPollutionWebSitePollFrequency">1200000</integer>
+    <integer name="maxAqiUpdateFrequency">3600000</integer>
+    <integer name="uiServicePollingFrequency ">10000</integer>
+    <string name="bitlyUser">citisense</string>
+    <string name="bitlyAPIkey">R_05cf9d0b41444b9092e8f9654ef71db1</string>
+    <string name="bitlyQueryEncoding">utf-8</string>
+    <string name="evaluationMode">false</string>
+    <string name="isNodeStationary">false</string>
+    <string name="startingLatitude">32.881974</string>
+    <string name="startingLongitude">-117.233334</string>
+</resources>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:gravity="center_horizontal"
+	android:layout_alignParentTop="true"	
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" 
+	android:background="#000000">
+	<LinearLayout 
+		android:orientation="vertical"
+		android:paddingTop="0dp" 
+		android:gravity="center_horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content">
+		<TextView 
+			android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="15sp"
+			android:textStyle="normal"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="center_vertical|center_horizontal"
+			android:text="my instantaneous" />
+		<TextView 
+			android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="-10.0sp"
+			android:textSize="35sp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="center_vertical|center_horizontal"
+			android:text="Air Quality" />
+	</LinearLayout>
+
+	<View android:layout_width="fill_parent" android:layout_height="2dp"
+		android:background="?android:attr/listDivider" />
+
+	<RelativeLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="#000000">
+		
+	    <!-- Cloud -->
+		<ImageView android:id="@+id/CloudView"
+			android:layout_centerHorizontal="true"
+			android:layout_alignParentTop="true"
+			android:layout_width="wrap_content"
+			android:layout_height="245dp"
+			android:layout_marginTop="5sp"
+			android:onClick="detailedView" />
+		
+		<!-- Text regarding AQI sensor reading -->
+		<TextView android:id="@+id/AqiTextView"
+			android:layout_centerHorizontal="true"
+			android:layout_alignParentTop="true"
+			android:layout_marginTop="52sp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="100sp"
+			android:textStyle="bold"
+			android:textColor="#000000"
+			android:text="" />
+		<TextView  android:id="@+id/readingLabel"
+			android:layout_centerHorizontal="true"
+			android:layout_alignParentTop="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="50sp"
+			android:textSize="18sp"
+			android:textStyle="bold"
+			android:textColor="#000000"
+			android:text="miAQI" />
+		<TextView android:id="@+id/aqi_meaning"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:layout_width="235sp"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="165sp"
+			android:gravity="center_horizontal"		
+			android:textSize="18sp"
+			android:textStyle="bold"
+			android:textColor="#000000"
+			android:maxLines="1"
+			android:text="" />
+		<TextView android:id="@+id/readingTime"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="185sp"			
+			android:textSize="14sp"
+			android:textStyle="normal"
+			android:textColor="#000000"
+			android:maxLines="1"
+			android:text="" />
+		<TextView android:id="@+id/updatedTimeAgo"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="240sp"			
+			android:textSize="12sp"
+			android:textStyle="normal"
+			android:textColor="#CCCCCC"
+			android:maxLines="1"
+			android:text="" />
+		
+		<!-- AQI Bar -->
+		<AbsoluteLayout android:id="@+id/aqiBarView"
+		    android:layout_width="240dp"
+		    android:layout_height="40dp"
+		    android:layout_marginTop="5dp"
+		    android:layout_below="@id/CloudView"
+		    android:layout_centerHorizontal="true" >
+		    
+		    <View
+		        android:layout_width="40dp"
+		        android:layout_x="0dp"
+		        android:layout_y="11dp"
+		        android:layout_height="29dp"
+		        android:background="#a5ce39" />
+		    <View
+		        android:layout_width="40dp"
+		        android:layout_x="40dp"
+		        android:layout_y="11dp"
+		        android:layout_height="29dp"
+		        android:background="#fff700" />
+		    <View
+		        android:layout_width="40dp"
+		        android:layout_x="80dp"
+		        android:layout_y="11dp"
+		        android:layout_height="29dp"
+		        android:background="#f79418" />
+		    <View
+		        android:layout_width="40dp"
+		        android:layout_x="120dp"
+		        android:layout_y="11dp"
+		        android:layout_height="29dp"
+		        android:background="#ef1821" />
+		    <View
+		        android:layout_width="80dp"
+		        android:layout_x="160dp"
+		        android:layout_y="11dp"
+		        android:layout_height="29dp"
+		        android:background="#a5004a" />
+		    
+		    <View android:id="@+id/aqiBarView_line"
+		        android:layout_width="2dp"
+		        android:layout_x="0dp"
+		        android:layout_y="11dp"
+		        android:layout_height="29dp"
+		        android:visibility="invisible"
+		        android:background="#dddddd" />
+		        
+	        <ImageView android:id="@+id/aqiBarView_arrow"
+	        	android:layout_width="10dp"
+		        android:layout_x="-4dp"
+		        android:layout_y="0dp"
+		        android:layout_height="10dp"
+		        android:visibility="invisible"
+		        android:src="@drawable/down_arrow"
+		        android:background="#dddddd" />
+		    
+	    </AbsoluteLayout>
+	    
+		<!-- Help button -->
+		<Button android:id="@+id/aqiBarView_help_button"
+	            android:layout_above="@id/aqiBarView"
+	            android:layout_alignRight="@id/aqiBarView"
+		        android:layout_width="45dp"
+		        android:layout_height="45dp"
+		        android:background="@android:drawable/ic_menu_help"
+		        android:onClick="helpDialog" />
+		
+		<!-- Bluetooth Reconnect button -->
+		<Button android:id="@+id/bluetoothButton"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content" 
+			android:drawableRight="@drawable/bluetooth_red"
+			android:onClick="connectToSensor" 
+			android:visibility="visible" /> 
+			
+		<!-- Share Buttons -->
+		<Button android:id="@+id/facebookButton"
+			android:layout_centerHorizontal="true"
+			android:layout_alignParentBottom="true" 
+			android:layout_height="70dp"
+			android:layout_width="70dp" 
+			android:drawableRight="@drawable/facebook"
+			android:onClick="sendFacebookSMS" />
+		<Button android:id="@+id/shareAQIButton"
+			android:layout_alignParentBottom="true" 
+			android:layout_toLeftOf="@id/facebookButton"
+			android:layout_height="70dp"
+			android:layout_width="70dp" 
+			android:onClick="share" 
+			android:drawableRight="@drawable/share" />
+		<Button 
+			android:id="@+id/twitterButton"
+			android:layout_toRightOf="@id/facebookButton"
+			android:layout_alignParentBottom="true"
+			android:layout_height="70dp"
+			android:layout_width="70dp"
+			android:drawableRight="@drawable/twitter"
+			android:onClick="sendTwitterSMS" />
+		
+		<!-- Version Number -->
+		<TextView 
+			android:layout_alignParentBottom="true" 
+			android:layout_toRightOf="@id/twitterButton"
+			android:gravity="right"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent" 
+			android:textSize="10sp"
+			android:textStyle="normal" 
+			android:textColor="#CCCCCC" 
+			android:text="v0.5.29"/>
+	</RelativeLayout>
+
+</LinearLayout>

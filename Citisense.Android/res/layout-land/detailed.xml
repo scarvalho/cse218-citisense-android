@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:gravity="center_horizontal" 
+	android:layout_alignParentTop="true"	   
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000000"
+    android:onClick="detailsClick"
+    >
+	<RelativeLayout 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content">
+		
+		<org.citisense.android.AQIGraphView
+			android:id="@+id/graphView"	
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+			
+		<ImageView
+			android:id="@+id/graphViewMask"
+			android:background="#0000"
+			android:src="@drawable/cloud_loading"
+			android:scaleType="fitXY"
+			android:layout_alignTop="@id/graphView"
+			android:layout_alignBottom="@id/graphView"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:visibility="invisible"
+		/>
+	</RelativeLayout>
+</LinearLayout>
+
+

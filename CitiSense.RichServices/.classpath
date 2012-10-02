@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="dependencies/slf4j/slf4j-api-1.6.1-sources.jar"/>
+	<classpathentry kind="lib" path="dependencies/slf4j/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="dependencies/slf4j/slf4j-jdk14-1.6.1-sources.jar"/>
+	<classpathentry kind="lib" path="dependencies/slf4j/slf4j-jdk14-1.6.1.jar"/>
+	<classpathentry kind="lib" path="dependencies/spring/org.springframework.core-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="dependencies/spring/org.springframework.beans-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="dependencies/spring/org.springframework.context-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="dependencies/slf4j/jcl-over-slf4j-1.6.1-sources.jar"/>
+	<classpathentry kind="lib" path="dependencies/slf4j/jcl-over-slf4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="dependencies/spring/org.springframework.asm-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="dependencies/spring/org.springframework.expression-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="dependencies/activemq/activemq-core-5.3.2.jar"/>
+	<classpathentry kind="lib" path="dependencies/activemq/geronimo-jms_1.1_spec-1.1.1.jar"/>
+	<classpathentry kind="lib" path="dependencies/activemq/geronimo-j2ee-management_1.0_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="dependencies/spring/org.springframework.jms-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="dependencies/spring/org.springframework.aop-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="dependencies/spring/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="dependencies/spring/org.springframework.transaction-3.0.3.RELEASE.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Citisense.Common"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

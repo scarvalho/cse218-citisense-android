@@ -1,0 +1,24 @@
+Things to implement are:
+- Implement atomic policy update/add/remove, and design how this service is exposed and implemented
+	- Use double-check locking with an AtomicBoolean in MessageBusBase#deliverMessage.
+	- Expose suspend/continue on the API for bus
+ - Some caching in ServiceDataConnectors to improve performance maybe (cache methods)
+ - Fix TCPClient so that it throws an exception to the caller when connection cannot be established...
+ 
+ - In the future, make the following change:
+ 	- Each ServiceDescriptor has a single interface exposed, and multiple dependencies, but a ServiceDataConnector can have multiple service-descriptors.
+ 	  This way, we can always go through interfaces, not service names, and when a service-data-connector receives a request, it knows exactly which descriptor it is destined for.
+ 	  A much better design in many ways. (maybe I should do this right now, before we publish, but I will do it only if we have time...)
+ 	- Separate the ServiceDataConnector's client vs server implementations. For example, SDCJavaLocal would be an implementation that implements both, but not all versions have to implement all of them.
+ 	  By making this distinction, we can have a distinction on the descriptors as well actually. ServiceDescriptorIn, ServiceDescriptorOut for example.
+ 	  Then the in version only has the service interface, and out version has the the dependencies. And boviously, we provide combinations as convenience, and build our current thing that way.
+
+AFTER REFACTORING:
+- I need to make finding services similar to OSGI (an interface  + attributes).
+- Refactor the ServiceDataConnectors so that they are all queue based.
+  This means all methods of the nature "receiveMessage" will be async.
+
+IMPROVEMENTS:
+- In ServiceDescriptor:
+	- getRequiredServices() should return a collection of interfaces, not strings.
+- In RichService, we need to have a routing table. Given an interface, what specific service a request should be fwd-ed to.

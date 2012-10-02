@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:gravity="center_horizontal"
+	android:layout_alignParentTop="true"	
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:paddingBottom="5dp"
+	android:paddingTop="5dp"
+	android:paddingRight="5dp"
+	android:paddingLeft="5dp"
+	android:background="#000">
+	
+    <!-- CO -->
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:paddingTop="10dp"
+		android:gravity="center_horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content">
+		<TextView 
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="25dp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="left"
+			android:text="CO:" />
+		<TextView android:id="@+id/eval_CO"
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+			android:textSize="25dp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="right"
+			android:text="-" />
+		<TextView 
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+			android:textSize="25dp"
+			android:textStyle="normal"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="right"
+			android:text="ppm" />
+	</LinearLayout>
+	
+    <!-- NO2 -->
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:paddingTop="10dp"
+		android:gravity="center_horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content">
+		<TextView 
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="25dp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="left"
+			android:text="NO2:" />
+		<TextView android:id="@+id/eval_NO2"
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+			android:textSize="25dp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="right"
+			android:text="-" />
+		<TextView 
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+			android:textSize="25dp"
+			android:textStyle="normal"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="right"
+			android:text="ppb" />
+	</LinearLayout>
+	
+    <!-- O3 -->
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:paddingTop="10dp"
+		android:gravity="center_horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content">
+		<TextView 
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="25dp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="left"
+			android:text="O3:" />
+		<TextView android:id="@+id/eval_O3"
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+			android:textSize="25dp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="right"
+			android:text="-" />
+		<TextView 
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+			android:textSize="25dp"
+			android:textStyle="normal"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="right"
+			android:text="ppm" />
+	</LinearLayout>
+	
+    <!-- Temperature -->
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:paddingTop="10dp"
+		android:gravity="center_horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content">
+		<TextView 
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="25dp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="left"
+			android:text="Temp:" />
+		<TextView android:id="@+id/eval_TEMP"
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+			android:textSize="25dp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="right"
+			android:text="-" />
+		<TextView 
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+			android:textSize="25dp"
+			android:textStyle="normal"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="right"
+			android:text="F" />
+	</LinearLayout>
+	
+    <!-- Pressure -->
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:paddingTop="10dp"
+		android:gravity="center_horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content">
+		<TextView 
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="25dp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="left"
+			android:text="Pres:" />
+		<TextView android:id="@+id/eval_PRES"
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+			android:textSize="25dp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="right"
+			android:text="-" />
+		<TextView 
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+			android:textSize="25dp"
+			android:textStyle="normal"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="right"
+			android:text="mbar" />
+	</LinearLayout>
+	
+    <!-- Humidity -->
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:paddingTop="10dp"
+		android:gravity="center_horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content">
+		<TextView 
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="25dp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="left"
+			android:text="Humd:" />
+		<TextView android:id="@+id/eval_CO"
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+			android:textSize="25dp"
+			android:textStyle="bold"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="right"
+			android:text="-" />
+		<TextView 
+			android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+			android:textSize="25dp"
+			android:textStyle="normal"
+			android:textColor="#FFF"
+			android:singleLine="true"
+			android:gravity="right"
+			android:text="%" />
+	</LinearLayout>
+	<ScrollView
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:background="#FFF" >
+	    <TextView android:id="@+id/eval_debug"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingTop="10dp"
+		    android:paddingBottom="10dp"
+		    android:paddingRight="10dp"
+		    android:paddingLeft="10dp"
+		    android:textColor="#000"
+		    android:text="This is where debug information would go." />
+	</ScrollView>
+</LinearLayout>

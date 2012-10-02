@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:gravity="center_horizontal" 
+	android:layout_alignParentTop="true"	   
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000000"
+    android:onClick="detailsClick"
+    >
+	<LinearLayout
+	    android:orientation="vertical"
+	    android:paddingTop="5dp"
+		android:gravity="center_horizontal"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content">
+		<TextView 
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="35sp"
+			android:textStyle="bold" 
+			android:textColor="#FFF"	
+			android:maxLines="1"		
+			android:text="@string/detailedTitle"/>
+		<TextView 
+			android:id="@+id/detailsUpdatedText"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="right"
+			android:textSize="12sp"
+			android:maxLines="1" />	    			        
+	</LinearLayout>
+	<View 
+		android:layout_width="fill_parent" 
+		android:layout_height="2dp" 
+		android:background="?android:attr/listDivider"/>
+	 
+	<!-- Stretch some columns -->
+	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/pollutantTableLayout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:stretchColumns="1">
+	    <TableRow android:tag="NO2_val" >
+	        <TextView
+	            android:text="@string/no2"
+	            android:padding="3dip" 
+	            android:textSize="15sp"/>
+	        <TextView
+	            android:gravity="right"
+	            android:padding="3dip" 
+	            android:textSize="15sp"
+	            android:text="N/A"/>
+	    </TableRow>
+	    <TableRow android:tag="O3_val" >
+	        <TextView
+	            android:text="@string/ozone"
+	            android:padding="3dip" 
+	            android:textSize="15sp"/>
+	        <TextView	        	
+	            android:gravity="right"
+	            android:padding="3dip" 
+	            android:textSize="15sp"
+	            android:text="N/A"/>
+	    </TableRow>
+	    <TableRow android:tag="CO_val" >
+	        <TextView
+	            android:text="@string/co"
+	            android:padding="3dip" 
+	            android:textSize="15sp"/>
+	        <TextView	        	
+	            android:gravity="right"
+	            android:padding="3dip" 
+	            android:textSize="15sp"
+	            android:text="N/A"/>
+	    </TableRow>
+		<TableRow android:tag="TEMP_val" >
+	        <TextView
+	            android:text="@string/temp"
+	            android:padding="3dip" 
+	            android:textSize="15sp"/>
+	        <TextView
+	            android:gravity="right"
+	            android:padding="3dip" 
+	            android:textSize="15sp"
+	            android:text="N/A"/>
+	    </TableRow>
+	    <TableRow android:tag="HUMD_val" >
+	        <TextView
+	            android:text="@string/humd"
+	            android:padding="3dip" 
+	            android:textSize="15sp"/>
+	        <TextView
+	            android:gravity="right"
+	            android:padding="3dip" 
+	            android:textSize="15sp"
+	            android:text="N/A"/>
+	    </TableRow>
+	    <TableRow android:tag="PRES_val" >
+	        <TextView
+	            android:text="@string/pres"
+	            android:padding="3dip" 
+	            android:textSize="15sp"/>
+	        <TextView	        	
+	            android:gravity="right"
+	            android:padding="3dip" 
+	            android:textSize="15sp"
+	            android:text="N/A"/>
+	    </TableRow>	    
+	    <TableRow android:tag="MAX_AQI_val" >
+	        <TextView
+	            android:text="@string/dayMax"
+	            android:padding="3dip" 
+	            android:textSize="15sp"/>
+	        <TextView	        	
+	            android:gravity="right"
+	            android:padding="3dip" 
+	            android:textSize="15sp"
+	            android:text="N/A"/>
+	    </TableRow>	    
+	</TableLayout>
+	<View 
+		android:layout_width="fill_parent" 
+		android:layout_height="2dp" 
+		android:background="?android:attr/listDivider"/>
+		
+	<RelativeLayout 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content">
+		
+		<org.citisense.android.AQIGraphView
+			android:id="@+id/graphView"	
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+			
+		<ImageView
+			android:id="@+id/graphViewMask"
+			android:background="#0000"
+			android:src="@drawable/cloud_loading"
+			android:scaleType="fitXY"
+			android:layout_alignTop="@id/graphView"
+			android:layout_alignBottom="@id/graphView"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:visibility="invisible"
+		/>
+	</RelativeLayout>
+	
+</LinearLayout>

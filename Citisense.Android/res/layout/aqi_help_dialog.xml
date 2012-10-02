@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/aqi_help_layout"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              >
+    <ImageView android:id="@+id/aqi_help_image"
+               android:layout_width="300dp"
+               android:layout_height="275dp"
+               android:src="@drawable/aqi_meaning"
+               />
+
+    <TextView
+        android:id="@+id/aqi_help_link"
+        android:paddingTop="10dp"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:autoLink="all"
+        android:text="More information: http://cseweb.ucsd.edu/users/earrowsm/AirQualityInformation.html"
+        android:textColor="#FFF" />
+
+</LinearLayout>

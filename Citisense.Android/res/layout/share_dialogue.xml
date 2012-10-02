@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <TextView 
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content" 
+    		android:text="Share your data from the last..."
+    		android:padding="15dp"/>
+ 	<LinearLayout android:orientation="horizontal"
+ 			android:layout_width="fill_parent"
+ 			android:layout_height="wrap_content" android:gravity="center">
+		 	<Button	android:id="@+id/share_dialogue_1hour"
+		    		android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="1"
+			        android:text="1 Hour"/>
+		    <Button	android:id="@+id/share_dialogue_4hour"
+		    		android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="1"
+			        android:text="4 Hours"/>
+		    <Button	android:id="@+id/share_dialogue_day"
+		    		android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="1"
+			        android:text="Day"/>
+ 	</LinearLayout>
+            
+	<View
+			android:layout_width="fill_parent"
+			android:layout_height="1dp"
+			android:background="#ffffff"/>
+	        
+	<Button	android:id="@+id/share_dialogue_cancel"
+    		android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="Cancel"/>
+</LinearLayout>
