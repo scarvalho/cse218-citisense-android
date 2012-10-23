@@ -10,8 +10,6 @@ tmp/**/*
 
 
 *.class
+!.classpath
 
 # Package Files #
-*.jar
-*.war
-*.ear
