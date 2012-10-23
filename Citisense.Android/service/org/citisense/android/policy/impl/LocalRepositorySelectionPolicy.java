@@ -32,7 +32,7 @@ public class LocalRepositorySelectionPolicy implements Policy {
 		if (msg instanceof MessageRequestBase) {
 			MessageRequestBase request = (MessageRequestBase) msg;
 			if (request.getDestination().equals("LocalRepository")
-					&& bluetoothService.isSensorConnected() == BluetoothChatService.STATE_NONE) {
+					&& bluetoothService.getSensorState() == BluetoothChatService.STATE_NONE) {
 				// re-route it to sd service
 				if (AppLogger.isDebugEnabled(logger)) {
 					logger.debug("Re-routing message destined to LocalRepository to SanDiegoRepository");

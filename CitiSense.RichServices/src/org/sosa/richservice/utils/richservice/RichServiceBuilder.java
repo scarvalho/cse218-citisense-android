@@ -119,36 +119,10 @@ public class RichServiceBuilder {
 		Collection<String> requiredServices = serviceDescriptor
 				.getRequiredServices();
 		for (String requiredServiceName : requiredServices) {
-			ServiceDescriptor requiredService = services
+			ServiceDescriptorLocal requiredService = (ServiceDescriptorLocal)services
 					.get(requiredServiceName);
-
-			Collection<Class> interfaces = requiredService
-					.getExposedInterface();
-			for (Class<Object> cls : interfaces) {
-				Object serviceStub = ServiceProxy.proxy(cls, connector,
-						requiredServiceName);
-				String setterName = "set" + cls.getSimpleName();
-				try {
-					Method serviceSetter = serviceDescriptor
-							.getExposedImplementation().getClass().getMethod(
-									setterName, new Class[] { cls });
-					serviceSetter.invoke(serviceDescriptor
-							.getExposedImplementation(), serviceStub);
-				} catch (SecurityException e) {
-					throw new Exception("Exception using setter '"
-							+ setterName
-							+ "' in class '"
-							+ serviceDescriptor.getExposedImplementation()
-									.getClass() + "'");
-				} catch (NoSuchMethodException e) {
-					throw new Exception("The setter '"
-							+ setterName
-							+ "' cannot be found in class '"
-							+ serviceDescriptor.getExposedImplementation()
-									.getClass() + "'");
-				}
-			}
-
+			
+			serviceDescriptor.instantiateStubs(requiredService, connector, requiredServiceName);
 		}
 
 		connector.setService(serviceDescriptor);
@@ -159,10 +133,11 @@ public class RichServiceBuilder {
 			ServiceDescriptor... services) {
 		Map<Class<?>, ServiceDescriptor> descriptors = new HashMap<Class<?>, ServiceDescriptor>();
 		for (ServiceDescriptor serviceDescriptor : services) {
-			Collection<Class> interfaces = serviceDescriptor
-					.getExposedInterface();
-			for (Class<Object> cls : interfaces) {
-				descriptors.put(cls, serviceDescriptor);
+			serviceDescriptor.initInterfaceIterator();
+			Class iface;
+			while ((iface = serviceDescriptor.getNextInterface()) != null)
+			{
+				descriptors.put(iface, serviceDescriptor);
 			}
 		}
 

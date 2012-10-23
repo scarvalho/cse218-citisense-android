@@ -18,6 +18,7 @@ import org.sosa.richservice.ServiceDescriptorLocal;
 import org.sosa.richservice.base.MessageCorrelator;
 import org.sosa.richservice.base.MessageErrorBase;
 import org.sosa.richservice.base.MessageResponseBase;
+import org.sosa.richservice.base.ServiceDescriptorLocalBase;
 import org.sosa.richservice.utils.richservice.RichServiceUtils;
 
 /**
@@ -131,22 +132,11 @@ public class ServiceDataConnectorJavaLocal implements
 			// Find the correct API to call on the service
 			try {
 
-				// Find the method signature from the service interface
-				Collection<Class> interfaces = service.getExposedInterface();
-				Method methodToCall = null;
-				for (Class<Object> cls : interfaces) {
-					try {
-						methodToCall = cls.getMethod(request.getOperation(),
-								request.getOperationParameterTypes());
-						break; // stop immediately when found
-					} catch (NoSuchMethodException e) {
-						// not this one, maybe next one
-					}
-				}
-
+				// Find the method signature from the service interface				
+				Method methodToCall = service.getServiceMethod(request.getOperation(), request.getOperationParameterTypes());
+				
 				// Make the request on the actual service implementation
-				Object result = methodToCall.invoke(service
-						.getExposedImplementation(), request
+				Object result = ((ServiceDescriptorLocalBase) service).invokeMethodOnImpl(methodToCall, request
 						.getOperationParameterValues());
 
 				bus.deliverMessage(new MessageResponseBase(service

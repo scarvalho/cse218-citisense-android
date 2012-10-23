@@ -1,5 +1,7 @@
 package org.sosa.richservice;
 
+import org.sosa.richservice.ServiceDescriptor;
+
 /**
  * 
  * @author celal.ziftci
@@ -7,4 +9,8 @@ package org.sosa.richservice;
  */
 public interface ServiceDescriptorLocal extends ServiceDescriptor {
 	public Object getExposedImplementation();
+	
+	public void instantiateStubs(ServiceDescriptorLocal requiredService, 
+			ServiceDataConnector<ServiceDescriptorLocal> connector, 
+			String requiredServiceName) throws Exception;
 }

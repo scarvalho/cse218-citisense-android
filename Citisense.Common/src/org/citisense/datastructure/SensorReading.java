@@ -19,4 +19,9 @@ public interface SensorReading extends Serializable {
 	public String getTimeDateAsString();
 	
 	public Location<Object> getLocation();
+	
+	public SensorType getPollutantType();
+	
+	public void setPollutantType(String mainPollutant);
+	
 }

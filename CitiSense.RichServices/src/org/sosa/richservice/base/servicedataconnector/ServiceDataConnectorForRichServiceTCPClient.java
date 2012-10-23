@@ -62,7 +62,7 @@ public class ServiceDataConnectorForRichServiceTCPClient implements
 			MessageRequest request = (MessageRequest) msg;
 			String operation = request.getOperation();
 			Class[] paramTypes = request.getOperationParameterTypes();
-			Class requestedInterface = findServiceInterface(request);
+			Class requestedInterface = this.getService().getServiceClass(request.getOperation(), request.getOperationParameterTypes());
 			TcpClient tcpClient = null;
 			try {
 				tcpClient = new TcpClient(host, port, connectTimeout);
@@ -115,23 +115,6 @@ public class ServiceDataConnectorForRichServiceTCPClient implements
 		}
 		// FIXME: This connector does not expose any interfaces to the upper
 		// world yet. If it does one day, we will think about it...
-	}
-
-	private Class findServiceInterface(MessageRequest request) {
-		Class iface = null;
-		Collection<Class> interfaces = this.getService().getExposedInterface();
-
-		for (Class cls : interfaces) {
-			try {
-				Method method = cls.getMethod(request.getOperation(), request
-						.getOperationParameterTypes());
-				iface = cls;
-			} catch (Exception e) {
-				// FIXME: Make sure this is smth like nosuchmethodexception or
-				// security exception. Other ones are legit
-			}
-		}
-		return iface;
 	}
 
 	@Override

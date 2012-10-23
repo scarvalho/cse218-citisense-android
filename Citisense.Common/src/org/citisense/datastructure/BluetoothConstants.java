@@ -17,4 +17,7 @@ public class BluetoothConstants {
 	// Intent request codes
 	public static final int REQUEST_CONNECT_DEVICE = 1;
 	public static final int REQUEST_ENABLE_BT = 2;
+	
+	// MOCK Service
+	public static final boolean USE_MOCK_BLUETOOTH = true;
 }

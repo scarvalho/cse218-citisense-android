@@ -11,6 +11,10 @@ import java.util.TreeMap;
 import org.citisense.android.androidservice.AndroidBackgroundServiceStarter;
 import org.citisense.android.androidservice.LocalBinder;
 import org.citisense.android.bluetooth.BluetoothChatService;
+
+// MOCK Service reference
+import org.citisense.datastructure.BluetoothConstants;
+
 import org.citisense.android.service.impl.AppLogger;
 import org.citisense.android.service.impl.ApplicationSettings;
 import org.citisense.android.service.impl.CitiSenseExposedServices;
@@ -197,9 +201,10 @@ public class Aqi_ui extends Activity {
 					if(newAqiReading != null) {
 						currentAqi = (int)newAqiReading.getSensorData();
 						currentReadingTime = newAqiReading.getTimeDate();
-						currentUnits = (newAqiReading.getLocation() != null && newAqiReading.getLocation().getProvider() != null) 
-							? SensorType.valueOf(newAqiReading.getLocation().getProvider()) 
-							: null;
+//						currentUnits = (newAqiReading.getLocation() != null && newAqiReading.getLocation().getProvider() != null) 
+//							? SensorType.valueOf(newAqiReading.getLocation().getProvider()) 
+//							: null;
+						currentUnits = newAqiReading.getPollutantType();
 						new UpdateAqiDisplay().execute();
 					} else {
 						if(AppLogger.isWarnEnabled(logger))
@@ -510,14 +515,16 @@ public class Aqi_ui extends Activity {
 			// Further updates are done via callbacks
 			checkBluetoothConnection();			
 //			timeUpdateHandler.post(updateTimeTask);
-			if(exposedServices != null && exposedServices.isSensorConnected() == BluetoothChatService.STATE_CONNECTED) {
+			if(exposedServices != null && exposedServices.getSensorState() == BluetoothChatService.STATE_CONNECTED) {
 				SensorReading lastAqiReading = exposedServices.getLastReading(SensorType.AQI);
 				if(lastAqiReading != null) {
 					currentAqi = (int)lastAqiReading.getSensorData();
 					currentReadingTime = lastAqiReading.getTimeDate();
-					currentUnits = (lastAqiReading.getLocation() != null && lastAqiReading.getLocation().getProvider() != null) 
-						? SensorType.valueOf(lastAqiReading.getLocation().getProvider()) 
-						: null;
+					currentUnits = lastAqiReading.getPollutantType();
+					
+//					currentUnits = (lastAqiReading.getLocation() != null && lastAqiReading.getLocation().getProvider() != null) 
+//						? SensorType.valueOf(lastAqiReading.getLocation().getProvider()) 
+//						: null;					
 					new UpdateAqiDisplay().execute();
 				}
 			}
@@ -531,12 +538,14 @@ public class Aqi_ui extends Activity {
 	
 	// Only checked once, on binding to the background service
 	// Further updates are handled through callbacks
+	
 	private void checkBluetoothConnection() {
 		if(exposedServices == null)
 			return;
 		//check if sensor is connected
 		if(//exposedServices.isSensorConnected() == BluetoothChatService.STATE_CONNECTING || 
-				exposedServices.isSensorConnected() == BluetoothChatService.STATE_CONNECTED){
+				exposedServices.getSensorState() == BluetoothChatService.STATE_CONNECTED ||
+				BluetoothConstants.USE_MOCK_BLUETOOTH == true){
 			sensorConnect.setVisibility(View.INVISIBLE);
 		} else {
 			sensorConnect.setVisibility(View.VISIBLE);

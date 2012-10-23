@@ -135,15 +135,11 @@ public class AqiTracker {
 			}
 		}
 		
-		// Hack
-		// AQI has a different loc form: the offending pollutant is stored in 'source'
-		if(loc != null)
-			aqiLoc = new LocationImpl<Object>(loc.getLatitude(), loc.getLongitude(), 
-					loc.getAltitude(), time, mainPollutant, 0, loc.getExtraInformation());
-		
 		// Make a new sensor reading of type AQI
 		SensorReading aqi_reading = new SensorReadingImpl(
-				SensorType.AQI, aqi, maxReading.getSensorType().toString(), time, aqiLoc);
+				SensorType.AQI, aqi, maxReading.getSensorType().toString(), time, loc);
+		aqi_reading.setPollutantType(mainPollutant);
+		
 		if(AppLogger.isInfoEnabled(logger))
 			logger.info("Adding AQI reading: AQI = {} original = {} ({})",
 				new Object[]{

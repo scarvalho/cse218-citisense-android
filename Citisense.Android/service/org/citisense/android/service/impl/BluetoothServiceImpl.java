@@ -12,6 +12,7 @@ import static org.citisense.datastructure.BluetoothConstants.MESSAGE_WRITE;
 
 import org.citisense.android.UICallbackTypes;
 import org.citisense.android.bluetooth.BluetoothChatService;
+import org.citisense.android.bluetooth.MockBluetoothChatService;
 import org.citisense.android.service.BluetoothService;
 import org.citisense.android.service.LocalRepository;
 import org.citisense.datastructure.SensorReading;
@@ -42,10 +43,6 @@ public class BluetoothServiceImpl implements BluetoothService {
 	// Key names received from the BluetoothChatService Handler
 	public static final String DEVICE_NAME = "device_name";
 	public static final String TOAST = "toast";
-	
-	private static final double CO_SPIKE_THRESHOLD = 15.0;
-	private static final double NO2_SPIKE_THRESHOLD = 1.0;
-	private static final double O3_SPIKE_THRESHOLD = 0.3;
 
 	// Name of the connected device
 	private String mConnectedDeviceName = null;
@@ -60,8 +57,7 @@ public class BluetoothServiceImpl implements BluetoothService {
 	// Used for reconnecting timing
 	private int quickReconnectCount = 0;
 	// Local copies of the last set of readings received
-	private SensorReading[] lastReadings = new SensorReading[SensorType.values().length];
-	private SensorReading[] lastLastReadings = new SensorReading[SensorType.values().length];
+	protected static SensorReadingFilter sFilter = new SensorReadingFilter();
 	
 	// So we know not to reconnect when a lost connection error occurs
 	private boolean disconnectedOnPurpose = false;
@@ -78,82 +74,91 @@ public class BluetoothServiceImpl implements BluetoothService {
 	// private Context context;
 	private Handler parentHandler;
 
-	// public BluetoothChat(Context context, Handler parentHandler) {
+	/**
+	 * Constructor enables the Bluetooth adapter, and starts the ChatService to BT.
+	 *
+	 * @post
+	 *   	Bluetooth connection is enabled
+	 */
 	public BluetoothServiceImpl() {
 		this.parentHandler = new SensorServiceBluetooth();
 
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+		String address = null;
 		// If still null, not supported
-		if (mBluetoothAdapter == null) {
-			// Toast.makeText(context, "Bluetooth is not available",
-			// Toast.LENGTH_LONG).show();
-			return;
-		}
+		if (mBluetoothAdapter != null) {
 
-		// Hack: If the application crashed earlier, it may have left the bluetooth connection in a bad state
-		// Bad solution: Always disable and then re-enable the BT connection at start up
-		if (mBluetoothAdapter.isEnabled()) {
-			mBluetoothAdapter.disable();
-			while (mBluetoothAdapter.getState() != BluetoothAdapter.STATE_OFF)
-				try {Thread.sleep(1000);} catch(InterruptedException e){};
-//			try {
-//				Thread.sleep(2500);
-//			} catch (InterruptedException e) {
-//				
-//			}
+			// Hack: If the application crashed earlier, it may have left the bluetooth connection in a bad state
+			// Bad solution: Always disable and then re-enable the BT connection at start up
+			if (mBluetoothAdapter.isEnabled()) {
+				mBluetoothAdapter.disable();
+				while (mBluetoothAdapter.getState() != BluetoothAdapter.STATE_OFF)
+					try {Thread.sleep(1000);} catch(InterruptedException e){};
+	
+			}
+			
+			if (!mBluetoothAdapter.isEnabled()) {
+				mBluetoothAdapter.enable();
+				while (mBluetoothAdapter.getState() != BluetoothAdapter.STATE_ON)
+					try {Thread.sleep(1000);} catch(InterruptedException e){};;
+	
+			}
+				
+			Log.d("BluetoothServiceImpl", "Device state: " + mBluetoothAdapter.getState());
+			
+			// Initialize the BluetoothChatService to perform bluetooth connections
+			mChatService = new BluetoothChatService(mHandler);
+			address = settings.preferences().getString("lastSensorAddress", null);
 		}
-		
-		if (!mBluetoothAdapter.isEnabled()) {
-			mBluetoothAdapter.enable();
-			while (mBluetoothAdapter.getState() != BluetoothAdapter.STATE_ON)
-				try {Thread.sleep(1000);} catch(InterruptedException e){};;
-			// Intent enableIntent = new Intent(
-			// BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			// context.startActivity(enableIntent);
+		else {
+				// Initialize the BluetoothChatService to perform bluetooth connections
+				mChatService = new MockBluetoothChatService(mHandler);
+				address = "MOCK BLUETOOTH ADDRESS";
 		}
-		
-		Log.d("BluetoothServiceImpl", "Device state: " + mBluetoothAdapter.getState());
-
-		// Initialize the BluetoothChatService to perform bluetooth connections
-		mChatService = new BluetoothChatService(mHandler);
 		// Initialize the buffer for outgoing messages
 		mOutStringBuffer = new StringBuffer("");
-		
 		mChatService.start();
 		
 		// When first starting, try to connect to your last sensor board
-		String address = settings.preferences().getString("lastSensorAddress", null);
 		if(address != null) {
 			connectSensor(address, 0);
 		}
 		
 		context = settings.context();
+		
+		//Assert post-conditions of function.
+		assert(mBluetoothAdapter.isEnabled() == true);
 	}
 
+	/**
+	 * Request to connect immediately to sensor at address provided.
+	 *
+	 * @param address the address of sensor
+	 * @pre   address is non-null
+	 * 		
+	 */
 	public void connectSensor(String address) {
+		assert(address != null);
+		
 		connectSensor(address, 0);
 	}
-	
+
+	/**
+	 * Request to sensor at address provided, after a delay in milliseconds.
+	 * Connect sensor thread is started.
+	 *
+	 * @param address  the address of sensor
+	 * @param delay    the delay in milliseconds
+	 * @pre   address is non-null
+	 * @pre   delay is non-negative
+	 * @pre   Current sensor state is BluetoothChatService.STATE_NONE
+	 */
 	public void connectSensor(String address, int delay) {
-		if(address == null) {
-			if(AppLogger.isErrorEnabled(logger))
-				logger.error("Address to connect to was NULL!");
-			return;
-		}
+		assert(sensorState == BluetoothChatService.STATE_NONE);
+		assert(address != null);
+		assert(delay >= 0);
 		
-		// The sensor is already connected, disconnect first
-		if(sensorState != BluetoothChatService.STATE_NONE) {
-			disconnectSensor();
-			// Sleep a second to let the BT hardware catch up
-//			try {
-//				Thread.sleep(1000);
-//			} catch (Exception e) {
-//				
-//			}
-			
-		}
-			
 		// Save the passed in address for future use
 		SharedPreferences.Editor editor = settings.preferences().edit();
 		editor.putString("lastSensorAddress", address);
@@ -169,12 +174,17 @@ public class BluetoothServiceImpl implements BluetoothService {
 			BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
 			// Attempt to connect to the device
 			mChatService.connect(device, delay);
-		} else {
-			if(AppLogger.isErrorEnabled(logger))
-				logger.error("Invalid Bluetooth device address passed to connect()");
+		} 
+		else {
+			BluetoothDevice device = null;
+			mChatService.connect(device, delay);
 		}
 	}
 
+	/**
+	 * Request to disconnect sensor. ChatService is stopped.
+	 *
+	 */	
 	public void disconnectSensor() {
 		if (mChatService != null) {
 			disconnectedOnPurpose = true;
@@ -182,72 +192,82 @@ public class BluetoothServiceImpl implements BluetoothService {
 		}
 	}
 
-	public int isSensorConnected() {
+	/**
+	 * Returns sensor state 
+	 *
+	 * @result sensorState is one of BluetoothChatService.STATE_NONE,
+	 * 							    BluetoothChatService.STATE_LISTEN, 
+	 * 							    BluetoothChatService.STATE_CONNECTING,
+	 * 								BluetoothChatService.STATE_CONNECTED
+	 */	
+	public int getSensorState() {
 		return sensorState;
 	}
 
+	/**
+	 * Sets Observation Repository for service
+	 * 
+	 * @param  observationRepository the repository where measurements will be saved
+	 * @pre    observationRepository is non-null
+	 *
+	 */		
 	public void setObservationRepository(
 			ObservationRepository observationRepository) {
+		assert(observationRepository != null);
 		this.observationRepository = observationRepository;
 	}
 
+	/**
+	 * Sets Local Repository for service
+	 * 
+	 * @param  localRepository the repository where measurements will be saved
+	 * @pre    localRepository is non-null
+	 *
+	 */		
 	public void setLocalRepository(LocalRepository localRepository) {
+		assert(localRepository != null);
 		this.localRepository = localRepository;
 	}
 
+	/**
+	 * Sets Location Service implementation
+	 * 
+	 * @param  locationService the class implementing location services
+	 * @pre    locationService is non-null
+	 *
+	 */	
 	public void setLocationService(LocationService locationService) {
+		assert(locationService != null);
 		this.locationService = locationService;
 	}
-
-	// public void ensureDiscoverable() {
-	// if (D)
-	// if (AppLogger.isDebugEnabled(logger))
-	// logger.debug("ensure discoverable");
-	// if (mBluetoothAdapter.getScanMode() !=
-	// BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-	// Intent discoverableIntent = new Intent(
-	// BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-	// discoverableIntent.putExtra(
-	// BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-	// context.startActivity(discoverableIntent);
-	// }
-	// }
 
 	/**
 	 * Sends a message.
 	 * 
-	 * @param message
-	 *            A string of text to send.
+	 * @param message A string of text to send.
+	 * 
+	 * @pre   Current state should be STATE_CONNECTED
+	 * @pre   message is non-null
+	 * @post  if connected, message will be sent
 	 */
 	public void sendMessage(String message) {
-		// Check that we're actually connected before trying anything
-		if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
-			// Toast.makeText(context, R.string.not_connected,
-			// Toast.LENGTH_SHORT)
-			// .show();
-			return;
-		}
+		
+		assert(mChatService.getState() == BluetoothChatService.STATE_CONNECTED);
+		assert(message != null);
 
-		// Check that there's actually something to send
-		if (message.length() > 0) {
-			// Get the message bytes and tell the BluetoothChatService to write
-			byte[] send = message.getBytes();
-			mChatService.write(send);
+		// Get the message bytes and tell the BluetoothChatService to write
+		byte[] send = message.getBytes();
+		mChatService.write(send);
 
-			// Reset out string buffer to zero and clear the edit text field
-			mOutStringBuffer.setLength(0);
-		}
+		// Reset out string buffer to zero and clear the edit text field
+		mOutStringBuffer.setLength(0);
 	}
 
-	// private static String getHexString(byte[] b) {
-	// String result = "";
-	// for (int i = 0; i < b.length; i++) {
-	// result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
-	// }
-	// return result;
-	// }
-
-	// Returns the name of the device currently connected to.
+	/**
+	 * Returns the name of the device currently connected to.
+	 *
+	 * @result String is name of current device
+	 */
 	public String getDeviceName() {
 		return mConnectedDeviceName;
 	}
@@ -345,54 +365,11 @@ public class BluetoothServiceImpl implements BluetoothService {
 					for (int i = 0; i < msg.arg1; i++)
 						buf[i] = readBuf[i];
 					
-					// Third byte is sensor identifier
-					byte sensorByte = buf[2];
-					// Fourth and fifth bytes are sensor value
-					byte[] valBytes = { buf[3], buf[4] };
-	
-					int val = (int) valBytes[0] & 0xff;
-					int val2 = (int) valBytes[1] & 0xff;
-					val = val << 8;
-					val = val | val2;
-					
-					float value = (float)val;
-	
-					int sensor = (int) sensorByte & 0xff;
-					int j = 0;
-					while (sensor != 0) {
-						sensor = sensor >> 1;
-						j++;
-					}
-					
-					// Check if the sensor type is NONE (j == 8)
-					// If so, discard the message
-					if(j == 8) {
-						break;
-					}
-					
-					// Figure out units for measurement
-					SensorType sensorType = SensorType.getSensorTypeFor(j);
-					String sensorUnits = sensorType.getUnits();
-	
-					if (sensorType == SensorType.NO2) {
-						value /= 1000;
-					} else if(sensorType == SensorType.O3) {
-						value /= 1000;
-					} else if (sensorType == SensorType.CO) {
-						value /= 10;
-					} else if (sensorType == SensorType.TEMP) {
-						value /= 10;
-					} else if (sensorType == SensorType.PRES) {
-						value /= 10;
-					} else if (sensorType == SensorType.HUMD) {
-	
-					} else {
-						sensorUnits = "UNKNOWN";
-					}
+					SensorMessage smsg = new SensorMessage(buf);
 	
 					// Get a current time stamp and location for the data
-					SensorReading sensorReading = new SensorReadingImpl(sensorType,
-							value, sensorUnits, System.currentTimeMillis(),
+					SensorReading sensorReading = new SensorReadingImpl(smsg.sensorType,
+							smsg.value, smsg.sensorUnits, System.currentTimeMillis(),
 							locationService.getLastKnownLocation());
 	
 					parentHandler.obtainMessage(DATA_FROM_SENSOR, -1, -1,
@@ -402,11 +379,6 @@ public class BluetoothServiceImpl implements BluetoothService {
 				case MESSAGE_DEVICE_NAME:
 					// save the connected device's name
 					mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
-//					context = settings.context();
-//					if(context != null)
-//						Toast.makeText(uiContext, "Connected to " +
-//							mConnectedDeviceName,
-//							Toast.LENGTH_SHORT).show();
 					break;
 				case MESSAGE_TOAST:
 					context = settings.context();
@@ -429,73 +401,10 @@ public class BluetoothServiceImpl implements BluetoothService {
 			case DATA_FROM_SENSOR:
 				// What to do with the incoming data from BT
 				SensorReading sensorReading = (SensorReading) msg.obj;
-				//int pinNumber = sensorReading.getSensorType().getPinNumber();
-				// The last reading of the same type
-				SensorReading lastReading = lastReadings[sensorReading.getSensorType().ordinal()];
-				SensorReading lastLastReading= lastLastReadings[sensorReading.getSensorType().ordinal()];
 				
-				//Log.d("SensorService", "Recieved data from " + sensorReading.getSensorType() + " sensor: " + sensorReading.getSensorData());
+				// Filter spike from reading
+				SensorReading lastReading = sFilter.filterReading(sensorReading);
 				
-				// For each gas reading...
-				if(lastReading != null &&
-						( lastReading.getSensorType() == SensorType.CO || 
-						lastReading.getSensorType() == SensorType.NO2 ||
-						lastReading.getSensorType() == SensorType.O3) ) {
-					double lastData = lastReading.getSensorData();
-					double newData = sensorReading.getSensorData();
-					
-					// Filter out spikes from data
-					double diff = Math.abs(lastData - newData);
-					// If CO is a drop of 15.0 or more...
-					if( lastReading.getSensorType() == SensorType.CO &&  diff > CO_SPIKE_THRESHOLD) {
-						// No older data to compare to, so go ahead and filter it out
-						if(lastLastReading == null) {
-							lastReading = null;
-						} else {
-							double lastLastData = lastLastReading.getSensorData();
-							double lastDiff = Math.abs(lastLastData - lastData);
-							if(lastDiff > CO_SPIKE_THRESHOLD) {
-								lastReading = null;
-							}
-						}
-					}
-					// If NO2 is a drop of 1.0 or more...
-					else if( lastReading.getSensorType() == SensorType.NO2 &&  diff > NO2_SPIKE_THRESHOLD) {
-						// No older data to compare to, so go ahead and filter it out
-						if(lastLastReading == null) {
-							lastReading = null;
-						} else {
-							double lastLastData = lastLastReading.getSensorData();
-							double lastDiff = Math.abs(lastLastData - lastData);
-							if(lastDiff > NO2_SPIKE_THRESHOLD) {
-								lastReading = null;
-							}
-						}
-					}
-					// If O3 is a drop of 1.0 or more...
-					else if( lastReading.getSensorType() == SensorType.O3 && diff > O3_SPIKE_THRESHOLD) {
-						// No older data to compare to, so go ahead and filter it out
-						if(lastLastReading == null) {
-							lastReading = null;
-						} else {
-							double lastLastData = lastLastReading.getSensorData();
-							double lastDiff = Math.abs(lastLastData - lastData);
-							if(lastDiff > O3_SPIKE_THRESHOLD) {
-								lastReading = null;
-							}
-						}
-					}
-				}
-				// Keep track as last reading
-				lastLastReadings[sensorReading.getSensorType().ordinal()] = lastReading;
-				// Make copy and store
-				SensorReading copyReading = new SensorReadingImpl( sensorReading.getSensorType(), 
-						sensorReading.getSensorData(),
-						sensorReading.getSensorUnits(),
-						sensorReading.getTimeMilliseconds(),
-						sensorReading.getLocation() );
-				lastReadings[sensorReading.getSensorType().ordinal()] = copyReading;
-
 				if(lastReading != null) {
 					// Push to local storage
 					localRepository.storeSensorReading(lastReading);

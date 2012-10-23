@@ -141,8 +141,8 @@ public class CitiSenseExposedServices implements LocationService,
 	}
 
 	@Override
-	public int isSensorConnected() {
-		return bluetoothService.isSensorConnected();
+	public int getSensorState() {
+		return bluetoothService.getSensorState();
 	}
 
 	//@SuppressWarnings("unchecked")

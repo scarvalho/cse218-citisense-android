@@ -7,6 +7,7 @@ import java.util.Collections;
 import org.citisense.android.androidservice.AndroidBackgroundServiceStarter;
 import org.citisense.android.androidservice.LocalBinder;
 import org.citisense.android.bluetooth.BluetoothChatService;
+import org.citisense.datastructure.BluetoothConstants;
 import org.citisense.android.service.impl.AppLogger;
 import org.citisense.android.service.impl.ApplicationSettings;
 import org.citisense.android.service.impl.CitiSenseExposedServices;
@@ -202,10 +203,10 @@ public class Main extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				if (exposedServices.isSensorConnected() == BluetoothChatService.STATE_CONNECTED) {
+				if (exposedServices.getSensorState() == BluetoothChatService.STATE_CONNECTED) {
 					sensorReadingProviderButton
 							.setText("Pollution data provided by: sensor-board");
-				} else if(exposedServices.isSensorConnected() == BluetoothChatService.STATE_CONNECTING){
+				} else if(exposedServices.getSensorState() == BluetoothChatService.STATE_CONNECTING){
 					sensorReadingProviderButton
 						.setText("Connecting to sensor-board...");
 				} else {

@@ -181,7 +181,7 @@ public class Aqi_ui_detailed extends Activity {
 			
 			if(reading.getSensorType() == SensorType.AQI){
 				aqiSensorReading = reading;
-				aqiSensorType = SensorType.valueOf(reading.getLocation().getProvider());
+				aqiSensorType = reading.getPollutantType();
 			}
 			
 			TableRow row = getRowBySensorType(reading.getSensorType());
@@ -203,7 +203,7 @@ public class Aqi_ui_detailed extends Activity {
 			}
 			
 			if(reading.getSensorType() == SensorType.MAX_AQI){
-				units = "(" + reading.getLocation().getProvider() + ")";
+				units = "(" + reading.getPollutantType() + ")";
 			}
 			
 			TextView valueAndUnitsTextView = (TextView) row.getChildAt(1);

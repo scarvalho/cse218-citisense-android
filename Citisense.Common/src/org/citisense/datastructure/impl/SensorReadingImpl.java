@@ -107,4 +107,28 @@ public class SensorReadingImpl implements SensorReading {
 		Date d = dateFormatter.parse("4/21/2011 7:15:43 PM");
 		System.out.println(d);
 	}
+	
+	public void setPollutantType(String mainPollutant)
+	{
+		// Hack
+		// AQI has a different loc form: the offending pollutant is stored in 'source'
+		Location<Object> aqiLoc = new LocationImpl<Object>(location.getLatitude(), location.getLongitude(), 
+				location.getAltitude(), timeLong, mainPollutant, 0, location.getExtraInformation());
+		location = aqiLoc;
+	}
+	
+	public SensorType getPollutantType()
+	{
+		// Hack
+		// For AQI, main pollutant is stashed in location.getProvider();
+		if (location.getProvider() == "fake")
+		{
+			return null;
+		}
+		else
+		{
+			return SensorType.valueOf(location.getProvider());
+		}
+		
+	}
 }

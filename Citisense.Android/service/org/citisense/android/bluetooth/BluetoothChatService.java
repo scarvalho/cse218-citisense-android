@@ -54,35 +54,35 @@ import android.os.PowerManager;
  * performing data transmissions when connected.
  */
 public class BluetoothChatService {
-	private final Logger logger = LoggerFactory
+	protected final Logger logger = LoggerFactory
 			.getLogger(BluetoothChatService.class);
 
 	// Debugging
-	private static final boolean D = true;
+	protected static final boolean D = true;
 
 	// Name for the SDP record when creating server socket
-	private static final String NAME = "BluetoothChat";
+	protected static final String NAME = "BluetoothChat";
 
 	// Unique UUID for this application
-	private static final UUID MY_UUID = UUID
+	protected static final UUID MY_UUID = UUID
 			.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
 	// Member fields
-	private final BluetoothAdapter mAdapter;
-	private final Handler mHandler;
+	protected BluetoothAdapter mAdapter;
+	protected Handler mHandler;
 //	private AcceptThread mAcceptThread;
-	private Timer mConnectTimer;
-	private ConnectThread mConnectThread;
-	private ConnectedThread mConnectedThread;
-	private BluetoothDevice mDevice;
-	private int mState;
+	protected Timer mConnectTimer;
+	protected ConnectThread mConnectThread;
+	protected ConnectedThread mConnectedThread;
+	protected BluetoothDevice mDevice;
+	protected int mState;
 	
-	private PowerManager powerManager = ApplicationSettings
+	protected PowerManager powerManager = ApplicationSettings
 			.instance().powerManager();
-	private PowerManager.WakeLock wakeLock;
+	protected PowerManager.WakeLock wakeLock;
 	
 	// Minimum delay before attempting a connection
-	private static final int MIN_CONNECT_DELAY = 500;
+	protected static final int MIN_CONNECT_DELAY = 500;
 
 	// Constants that indicate the current connection state
 	public static final int STATE_NONE = 0; // we're doing nothing
@@ -107,13 +107,23 @@ public class BluetoothChatService {
 		wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "BluetoothChatService");
 	}
 
+	/** Barebone constructor, for mock
+	 * 
+	 */
+	public BluetoothChatService(){
+		mState = STATE_NONE;
+		mHandler = null;
+		mAdapter = null;
+		wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MockBluetoothChatService");
+	}
+	
 	/**
 	 * Set the current state of the chat connection
 	 * 
 	 * @param state
 	 *            An integer defining the current connection state
 	 */
-	private synchronized void setState(int state) {
+	protected synchronized void setState(int state) {
 		if (D)
 			if (AppLogger.isDebugEnabled(logger)) logger.debug("setState() " + mState + " -> " + state);
 		mState = state;
@@ -574,6 +584,7 @@ public class BluetoothChatService {
 					// END DEBUG
 					// While data remains to be processed
 					for (int i = 0; i < bytes; i++) {
+						
 						// Check to see if any bytes should be discarded
 						if (bytesToDiscard > 0) {
 							bytesToDiscard--;
