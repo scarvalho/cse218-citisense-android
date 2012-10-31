@@ -1,0 +1,66 @@
+<class-diagram version="1.0.10" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" corner="BOTTOM_RIGHT" language="java" name="org.sosa.richservice.base.ServiceDescriptorBase" 
+    project="CitiSense.RichServices" 
+    file="/CitiSense.RichServices/src/org/sosa/richservice/base/ServiceDescriptorBase.java" binary="false">    
+    <position height="-1" width="-1" x="323" y="310"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" name="org.sosa.richservice.base.ServiceDescriptorSingleIF" 
+    project="CitiSense.RichServices" 
+    file="/CitiSense.RichServices/src/org/sosa/richservice/base/ServiceDescriptorSingleIF.java" binary="false">    
+    <position height="211" width="282" x="334" y="475"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="3" corner="BOTTOM_RIGHT" language="java" name="org.sosa.richservice.base.ServiceDescriptorMultiIF" 
+    project="CitiSense.RichServices" 
+    file="/CitiSense.RichServices/src/org/sosa/richservice/base/ServiceDescriptorMultiIF.java" binary="false">    
+    <position height="214" width="313" x="5" y="475"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface id="4" corner="BOTTOM_RIGHT" language="java" name="org.sosa.richservice.ServiceDescriptor" 
+    project="CitiSense.RichServices" file="/CitiSense.RichServices/src/org/sosa/richservice/ServiceDescriptor.java" 
+    binary="false">    
+    <position height="-1" width="-1" x="325" y="81"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class id="5" corner="BOTTOM_RIGHT" language="java" name="org.sosa.richservice.ServiceDescriptorFactory" 
+    project="CitiSense.RichServices" 
+    file="/CitiSense.RichServices/src/org/sosa/richservice/ServiceDescriptorFactory.java" binary="false">    
+    <position height="251" width="272" x="502" y="78"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <realization id="6">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <generalization id="7">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="8">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
