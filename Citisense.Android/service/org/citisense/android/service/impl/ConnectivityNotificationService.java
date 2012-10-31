@@ -13,9 +13,11 @@ import org.citisense.android.CustomExceptionHandler;
 import org.citisense.utils.thread.DaemonThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sosa.richservice.ServiceDescriptor;
+import org.sosa.richservice.ServiceDescriptorFactory;
 import org.sosa.richservice.ServiceDescriptorLocal;
 import org.sosa.richservice.base.MessageNotificationBase;
-import org.sosa.richservice.base.ServiceDescriptorLocalBase;
+import org.sosa.richservice.base.ServiceDescriptorSingleIF;
 import org.sosa.richservice.base.servicedataconnector.ServiceDataConnectorJavaLocal;
 import org.sosa.richservice.utils.richservice.RichServiceUtils;
 
@@ -24,14 +26,14 @@ public class ConnectivityNotificationService {
 			.getLogger(ConnectivityNotificationService.class);
 
 	private final ServiceDataConnectorJavaLocal connector;
-	private final ServiceDescriptorLocal descriptor;
+	private final ServiceDescriptor descriptor;
 	private final ExecutorService executor;
 	private static final ApplicationSettings applicationSettings = ApplicationSettings
 			.instance();
 
 	public ConnectivityNotificationService() {
 		connector = new ServiceDataConnectorJavaLocal();
-		descriptor = new ServiceDescriptorLocalBase(
+		descriptor = ServiceDescriptorFactory.createServiceDescriptor(true,
 				"ConnectivityNotificationService", (Class<?>) null, null);
 		connector.setService(descriptor);
 

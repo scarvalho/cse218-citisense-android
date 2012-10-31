@@ -14,11 +14,12 @@ import org.sosa.richservice.MessageNotification;
 import org.sosa.richservice.MessageRequest;
 import org.sosa.richservice.MessageResponse;
 import org.sosa.richservice.ServiceDataConnector;
+import org.sosa.richservice.ServiceDescriptor;
 import org.sosa.richservice.ServiceDescriptorLocal;
 import org.sosa.richservice.base.MessageCorrelator;
 import org.sosa.richservice.base.MessageErrorBase;
 import org.sosa.richservice.base.MessageResponseBase;
-import org.sosa.richservice.base.ServiceDescriptorLocalBase;
+import org.sosa.richservice.base.ServiceDescriptorSingleIF;
 import org.sosa.richservice.utils.richservice.RichServiceUtils;
 
 /**
@@ -27,18 +28,17 @@ import org.sosa.richservice.utils.richservice.RichServiceUtils;
  * 
  */
 public class ServiceDataConnectorJavaLocal implements
-		ServiceDataConnector<ServiceDescriptorLocal> {
+		ServiceDataConnector<ServiceDescriptor> {
 
-	private ServiceDescriptorLocal service;
+	private ServiceDescriptor service;
 	private MessageBus bus;
 	private final MessageCorrelator<String, Message> messageCorrelator = new MessageCorrelator<String, Message>();
 
 	private final Logger logger = LoggerFactory
 			.getLogger(ServiceDataConnectorJavaLocal.class);
 
-	@Override
-	public void setService(ServiceDescriptorLocal service) {
-		this.service = service;
+	public void setService(ServiceDescriptor descriptor) {
+		this.service = descriptor;
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class ServiceDataConnectorJavaLocal implements
 	}
 
 	@Override
-	public ServiceDescriptorLocal getService() {
+	public ServiceDescriptor getService() {
 		return service;
 	}
 
@@ -136,7 +136,7 @@ public class ServiceDataConnectorJavaLocal implements
 				Method methodToCall = service.getServiceMethod(request.getOperation(), request.getOperationParameterTypes());
 				
 				// Make the request on the actual service implementation
-				Object result = ((ServiceDescriptorLocalBase) service).invokeMethodOnImpl(methodToCall, request
+				Object result = ((ServiceDescriptorSingleIF) service).invokeMethodOnImpl(methodToCall, request
 						.getOperationParameterValues());
 
 				bus.deliverMessage(new MessageResponseBase(service

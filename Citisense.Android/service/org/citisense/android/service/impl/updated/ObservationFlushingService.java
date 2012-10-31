@@ -15,9 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.sosa.richservice.Message;
 import org.sosa.richservice.MessageNotification;
 import org.sosa.richservice.MessageRequest;
+import org.sosa.richservice.ServiceDescriptor;
+import org.sosa.richservice.ServiceDescriptorFactory;
 import org.sosa.richservice.ServiceDescriptorLocal;
 import org.sosa.richservice.base.MessageRequestBase;
-import org.sosa.richservice.base.ServiceDescriptorLocalBase;
+import org.sosa.richservice.base.ServiceDescriptorSingleIF;
 import org.sosa.richservice.base.servicedataconnector.ServiceDataConnectorJavaLocal;
 import org.sosa.richservice.utils.richservice.RichServiceUtils;
 
@@ -37,7 +39,7 @@ public class ObservationFlushingService {
 			.getLogger(ObservationFlushingService.class);
 
 	private final ServiceDataConnectorJavaLocal connector;
-	private final ServiceDescriptorLocal descriptor;
+	private final ServiceDescriptor descriptor;
 	private final Method dataReadMethod, dataSaveMethod, dataDeleteMethod;
 	private boolean connectivityOn = false;
 	private final ApplicationSettings applicationSettings = ApplicationSettings
@@ -200,7 +202,7 @@ public class ObservationFlushingService {
 			}
 		};
 
-		descriptor = new ServiceDescriptorLocalBase(
+		descriptor = ServiceDescriptorFactory.createServiceDescriptor(
 				"ObservationFlushingService", (Class<?>) null, null,
 				"CloudService", "ObservationRepository");
 		connector.setService(descriptor);

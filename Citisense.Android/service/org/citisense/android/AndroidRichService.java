@@ -25,9 +25,10 @@ import org.slf4j.LoggerFactory;
 import org.sosa.richservice.RichService;
 import org.sosa.richservice.ServiceDataConnectorForRichService;
 import org.sosa.richservice.ServiceDescriptor;
+import org.sosa.richservice.ServiceDescriptorFactory;
 import org.sosa.richservice.ServiceDescriptorLocal;
 import org.sosa.richservice.base.ServiceDescriptorBase;
-import org.sosa.richservice.base.ServiceDescriptorLocalBase;
+import org.sosa.richservice.base.ServiceDescriptorSingleIF;
 import org.sosa.richservice.base.servicedataconnector.ServiceDataConnectorJavaLocal;
 import org.sosa.richservice.utils.richservice.RichServiceBuilder;
 
@@ -73,7 +74,8 @@ public class AndroidRichService {
 		// Stores readings in SQLLite database on the SD card
 		if (AppLogger.isDebugEnabled(logger))
 			logger.debug("Creating localRepositoryDescriptor...");
-		ServiceDescriptorLocal localRepositoryDescriptor = new ServiceDescriptorLocalBase(
+		ServiceDescriptor localRepositoryDescriptor = ServiceDescriptorFactory.createServiceDescriptor(
+				true,
 				Services.LocalRepository.name(), 
 				LocalRepository.class,
 				new LocalRepositoryImpl());
@@ -82,7 +84,8 @@ public class AndroidRichService {
 		
 		if (AppLogger.isDebugEnabled(logger))
 			logger.debug("Creating flushingTriggerServiceDescriptor...");
-		ServiceDescriptorLocal flushingTriggerServiceDescriptor = new ServiceDescriptorLocalBase(
+		ServiceDescriptor flushingTriggerServiceDescriptor = ServiceDescriptorFactory.createServiceDescriptor(
+				true,
 				Services.FlushingTriggerService.name(), 
 				FlushingTriggerService.class,
 				flushingTriggerService);
@@ -92,7 +95,8 @@ public class AndroidRichService {
 		// Stores readings in memory
 		if (AppLogger.isDebugEnabled(logger))
 			logger.debug("Creating observationRepositoryDescriptor...");
-		ServiceDescriptorLocal observationRepositoryDescriptor = new ServiceDescriptorLocalBase(
+		ServiceDescriptor observationRepositoryDescriptor = ServiceDescriptorFactory.createServiceDescriptor(
+				true,
 				Services.ObservationRepository.name(),
 				ObservationRepository.class, 
 				new ObservationRepositoryImpl(),
@@ -106,7 +110,8 @@ public class AndroidRichService {
 		//	- Gets android "LocationManager" from the application settings
 		if (AppLogger.isDebugEnabled(logger))
 			logger.debug("Creating locationServiceDescriptor...");
-		ServiceDescriptorLocal locationServiceDescriptor = new ServiceDescriptorLocalBase(
+		ServiceDescriptor locationServiceDescriptor = ServiceDescriptorFactory.createServiceDescriptor(
+				true,
 				Services.LocationService.name(), 
 				LocationService.class,
 				new LocationServiceImpl());
@@ -133,7 +138,8 @@ public class AndroidRichService {
 		if (AppLogger.isDebugEnabled(logger))
 			logger.debug("Creating bluetoothServiceDescriptor...");
 		BluetoothService blueToothServiceImpl = new BluetoothServiceImpl();
-		ServiceDescriptorLocal bluetoothServiceDescriptor = new ServiceDescriptorLocalBase(
+		ServiceDescriptor bluetoothServiceDescriptor = ServiceDescriptorFactory.createServiceDescriptor(
+				true,
 				Services.BluetoothService.name(), 
 				BluetoothService.class,
 				blueToothServiceImpl, 
@@ -149,7 +155,8 @@ public class AndroidRichService {
 		// with the real sensor.
 		if (AppLogger.isDebugEnabled(logger))
 			logger.debug("Creating sensorServiceTestDescriptor...");
-		ServiceDescriptorLocal sensorServiceTestDescriptor = new ServiceDescriptorLocalBase(
+		ServiceDescriptor sensorServiceTestDescriptor = ServiceDescriptorFactory.createServiceDescriptor(
+				true,
 				Services.SensorServiceTest.name(), SensorServiceTest.class,
 				new SensorServiceTestImpl(), Services.ObservationRepository
 						.name());
@@ -160,9 +167,11 @@ public class AndroidRichService {
 		// ServiceDataConnector to cloud
 		if (AppLogger.isDebugEnabled(logger))
 			logger.debug("Creating cloudServiceDescriptor...");
-		ServiceDescriptor cloudServiceDescriptor = new ServiceDescriptorBase(
+		ServiceDescriptor cloudServiceDescriptor = ServiceDescriptorFactory.createServiceDescriptor(
+				true,
 				Services.CloudService.name(), 
-				Arrays.<Class> asList(ObservationRepository.class));
+				ObservationRepository.class, 
+				null);
 		if (AppLogger.isDebugEnabled(logger))
 			logger.debug("...created cloudServiceDescriptor!");
 		
@@ -182,7 +191,7 @@ public class AndroidRichService {
 		// Service that accepts the calls from activities
 		if (AppLogger.isDebugEnabled(logger))
 			logger.debug("Creating exposedServicesDescriptor...");
-		ServiceDescriptor exposedServicesDescriptor = new ServiceDescriptorLocalBase(
+		ServiceDescriptor exposedServicesDescriptor = new ServiceDescriptorSingleIF(
 				Services.ExposedServices.name(), (Class) null,
 				new CitiSenseExposedServices(),
 				Services.LocationService.name(),
