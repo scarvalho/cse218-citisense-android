@@ -26,6 +26,4 @@ public interface ServiceDescriptor {
 	public Class getServiceClass(String operation, Class[] parameterTypes);
 	
 	public Method getServiceMethod(String operation, Class[] parameterTypes);
-	
-	public Object getExposedImplementation();
 }

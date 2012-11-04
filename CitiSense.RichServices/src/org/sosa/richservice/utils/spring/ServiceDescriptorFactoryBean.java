@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.sosa.richservice.ServiceDescriptor;
-import org.sosa.richservice.ServiceDescriptorFactory;
 import org.sosa.richservice.base.ServiceDescriptorBase;
-import org.sosa.richservice.base.ServiceDescriptorSingleIF;
+import org.sosa.richservice.base.ServiceDescriptorLocalBase;
 import org.springframework.beans.factory.FactoryBean;
 
 /**
@@ -79,8 +78,7 @@ public class ServiceDescriptorFactoryBean implements
 		// TODO: Make some sanity checks!!!
 
 		if (implementation == null && implementationObject == null) {
-			return ServiceDescriptorFactory.createServiceDescriptor
-					(name, serviceInterface, null);
+			return new ServiceDescriptorBase(name, serviceInterface);
 		} else {
 			Collection<Class> interfaces;
 			if (this.serviceInterfaces != null
@@ -102,12 +100,10 @@ public class ServiceDescriptorFactoryBean implements
 			}
 			// local
 			if (dependencies != null) {
-				return ServiceDescriptorFactory.createServiceDescriptor(
-						name, interfaces, object,
+				return new ServiceDescriptorLocalBase(name, interfaces, object,
 						dependencies.toArray(new String[dependencies.size()]));
 			} else {
-				return ServiceDescriptorFactory.createServiceDescriptor(
-						name, interfaces, object);
+				return new ServiceDescriptorLocalBase(name, interfaces, object);
 			}
 		}
 	}

@@ -6,7 +6,6 @@ import java.lang.reflect.Proxy;
 
 import org.sosa.richservice.MessageRequest;
 import org.sosa.richservice.ServiceDataConnector;
-import org.sosa.richservice.ServiceDescriptor;
 import org.sosa.richservice.ServiceDescriptorLocal;
 import org.sosa.richservice.base.MessageRequestBase;
 
@@ -18,21 +17,21 @@ import org.sosa.richservice.base.MessageRequestBase;
  */
 public class ServiceProxy implements InvocationHandler {
 
-	private final ServiceDataConnector<ServiceDescriptor> connector;
+	private final ServiceDataConnector<ServiceDescriptorLocal> connector;
 	private final String serviceBeingCalled;
 
 	@SuppressWarnings("unchecked")
 	public static <T> T proxy(Class<T> cls,
-			ServiceDataConnector<ServiceDescriptor> connector2,
+			ServiceDataConnector<ServiceDescriptorLocal> connector,
 			String requiredServiceName) {
 
 		return (T) Proxy.newProxyInstance(cls.getClassLoader(),
-				new Class[] { cls }, new ServiceProxy(connector2,
+				new Class[] { cls }, new ServiceProxy(connector,
 						requiredServiceName));
 	}
 
 	private ServiceProxy(
-			ServiceDataConnector<ServiceDescriptor> connector,
+			ServiceDataConnector<ServiceDescriptorLocal> connector,
 			String serviceName) {
 		this.connector = connector;
 		this.serviceBeingCalled = serviceName;

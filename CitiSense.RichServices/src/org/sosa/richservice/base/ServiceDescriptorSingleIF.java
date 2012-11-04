@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 
 import org.sosa.richservice.ServiceDataConnector;
-import org.sosa.richservice.ServiceDescriptor;
 import org.sosa.richservice.ServiceDescriptorLocal;
 import org.sosa.richservice.utils.richservice.ServiceProxy;
 
@@ -14,82 +13,60 @@ import org.sosa.richservice.utils.richservice.ServiceProxy;
  * @author celal.ziftci
  * 
  */
-public class ServiceDescriptorSingleIF extends ServiceDescriptorBase
-{
+public class ServiceDescriptorLocalBase extends ServiceDescriptorBase implements
+		ServiceDescriptorLocal {
 
+	private final Object impl;
 
-	private final Class iface;
-	private boolean isIterReset = true;
-	public ServiceDescriptorSingleIF(String serviceName,
-			Class iface, Object impl, String... requiredServices) {
-		super(serviceName, impl, requiredServices);
-		this.iface = iface;
-		
+	public ServiceDescriptorLocalBase(String serviceName,
+			Collection<Class> iface, Object impl, String... requiredServices) {
+		super(serviceName, iface, requiredServices);
+		this.impl = impl;
 	}
 
-	public Class getServiceClass(String operation, Class[] parameterTypes) {
-		Class result = null;
-		try {
-			Method method = iface.getMethod(operation, parameterTypes);
-			result = iface;
-		} catch (NoSuchMethodException e) {
-			result = null;
-		}	
-		return result;		
+	public ServiceDescriptorLocalBase(String serviceName, Class iface,
+			Object impl, String... requiredServices) {
+		super(serviceName, iface, requiredServices);
+		this.impl = impl;
+	}
+
+	@Override
+	public Object getExposedImplementation() {
+		return impl;
 	}
 	
-	public Method getServiceMethod(String operation, Class[] parameterTypes)
-	{
-		// Find the method signature from the service interface	
-		Method methodToCall = null;
-		try {
-			methodToCall = iface.getMethod(operation, parameterTypes);
-			// stop immediately when found
-			} catch (NoSuchMethodException e) {
-			// not this one, maybe next one
-			};
-		return methodToCall;
-	}	
-	
-	public void instantiateStubs(ServiceDescriptorLocal requiredService, ServiceDataConnector<ServiceDescriptor> connector, String requiredServiceName) throws Exception
+	public void instantiateStubs(ServiceDescriptorLocal requiredService, ServiceDataConnector<ServiceDescriptorLocal> connector, String requiredServiceName) throws Exception
 	{
 		requiredService.initInterfaceIterator();
-		Object serviceStub = ServiceProxy.proxy(iface, connector,
-				requiredServiceName);
-		String setterName = "set" + iface.getSimpleName();
-		Object impl = super.getExposedImplementation();
-		try {
-			Method serviceSetter = impl.getClass().getMethod(
-							setterName, new Class[] { iface });
-			serviceSetter.invoke(impl, serviceStub);
-		} catch (SecurityException e) {
-			throw new Exception("Exception using setter '"
-					+ setterName
-					+ "' in class '"
-					+ impl.getClass() + "'");
-		} catch (NoSuchMethodException e) {
-			throw new Exception("The setter '"
-					+ setterName
-					+ "' cannot be found in class '"
-					+ impl.getClass() + "'");
-		} 		
-	}
-
-	@Override
-	public void initInterfaceIterator() {
-		isIterReset = true;
-		
-	}
-
-	@Override
-	public Class getNextInterface() {		
-		if (isIterReset) 
+		Class iface;
+		while ((iface = requiredService.getNextInterface()) != null)
 		{
-			isIterReset = false;
-			return iface;
+			Object serviceStub = ServiceProxy.proxy(iface, connector,
+					requiredServiceName);
+			String setterName = "set" + iface.getSimpleName();
+			try {
+				Method serviceSetter = impl.getClass().getMethod(
+								setterName, new Class[] { iface });
+				serviceSetter.invoke(impl, serviceStub);
+			} catch (SecurityException e) {
+				throw new Exception("Exception using setter '"
+						+ setterName
+						+ "' in class '"
+						+ impl.getClass() + "'");
+			} catch (NoSuchMethodException e) {
+				throw new Exception("The setter '"
+						+ setterName
+						+ "' cannot be found in class '"
+						+ impl.getClass() + "'");
+			} 
 		}
-		else return null;
 	}
 	
+	public Object invokeMethodOnImpl(Method methodToCall, Object[] parameterValues) throws InvocationTargetException, IllegalAccessException 
+	{
+		// Make the request on the actual service implementation
+		Object result = methodToCall.invoke(impl, parameterValues);
 
+		return result;
+	}
 }
